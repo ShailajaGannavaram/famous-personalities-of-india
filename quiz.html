@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Quiz | Legends of Bharat</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f8ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      color: white;
+    }
+    .header {
+  background-color: #002244;
+  padding: 1rem 0;
+}
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+    }
+
+    .quiz-box {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    input {
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: #003366;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      margin: 1rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #resultMsg {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    #scoreDisplay, #timer {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    #leaderboard li {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">Famous Personalities Of Bharat</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="bios.html">Biographies</a></li>
+        <li><a href="ai-bios.html">AI Bio Generator</a></li>
+        <li><a href="indiamap.html">India Map</a></li>
+        <li><a href="quiz.html">AI Quiz</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="quiz-box">
+    <h2>🧠 Indian Personalities Quiz</h2>
+    <p id="question">Loading...</p>
+    <input type="text" id="answerInput" placeholder="Type or use 🎤" />
+    <br/>
+    <button onclick="checkAnswer()">✅ Submit</button>
+    <button onclick="startVoice()">🎤 Speak</button>
+    <button onclick="nextQuestion()">➡️ Next</button>
+    <button onclick="exportResults()">📥 Export</button>
+
+    <p id="resultMsg"></p>
+    <p id="scoreDisplay"></p>
+    <p id="timer">⏱ Time left: <span id="time">30</span>s</p>
+
+    <h3>🏆 Leaderboard</h3>
+    <ol id="leaderboard"></ol>
+  </div>
+
+  <script>
+    const questions = [
+      
+  { q: "Who is known as the Missile Man of India?", a: "apj abdul kalam" },
+  { q: "Who was the first Prime Minister of India?", a: "jawaharlal nehru" },
+  { q: "Who is the Father of the Nation?", a: "mahatma gandhi" },
+  { q: "Who was the first woman Prime Minister of India?", a: "indira gandhi" },
+  { q: "Which Indian leader led the Salt March?", a: "mahatma gandhi" },
+  { q: "Who wrote the Indian national anthem?", a: "rabindranath tagore" },
+  { q: "Who was the architect of the Indian Constitution?", a: "b r ambedkar" },
+  { q: "Who founded the Indian Space Research Organisation (ISRO)?", a: "vikram sarabhai" },
+  { q: "Who is known as the Iron Man of India?", a: "sardar vallabhbhai patel" },
+  { q: "Who founded the Tata Group?", a: "jamsetji tata" },
+
+  { q: "Who was India’s first woman President?", a: "pratibha patil" },
+  { q: "Who composed 'Vande Mataram'?", a: "bankim chandra chatterjee" },
+  { q: "Which Indian scientist won a Nobel Prize in Physics in 1930?", a: "c v raman" },
+  { q: "Who is the Nightingale of India?", a: "sarojini naidu" },
+  { q: "Who is known for leading the 1857 rebellion in Jhansi?", a: "rani lakshmi bai" },
+  { q: "Who led the Azad Hind Fauj?", a: "subhas chandra bose" },
+  { q: "Which Indian poet was also a Nobel laureate?", a: "rabindranath tagore" },
+  { q: "Who is the first Indian to win an Olympic gold medal?", a: "abhinav bindra" },
+  { q: "Which Indian cricketer is known as the Master Blaster?", a: "sachin tendulkar" },
+  { q: "Who was the first Indian in space?", a: "rakesh sharma" },
+
+  { q: "Who is the founder of Infosys?", a: "narayana murthy" },
+  { q: "Who is known as the Missile Woman of India?", a: "tessy thomas" },
+  { q: "Which mathematician is known for the number π and infinite series?", a: "srinivasa ramanujan" },
+  { q: "Who was India’s first Law Minister?", a: "b r ambedkar" },
+  { q: "Who was the first Indian to win the Nobel Peace Prize?", a: "mother teresa" },
+  { q: "Who is known as the father of Indian cinema?", a: "dhundiraj govind phalke" },
+  { q: "Which Indian industrialist is the chairman of Reliance Industries?", a: "mukesh ambani" },
+  { q: "Who was the first Indian woman to win an Olympic medal?", a: "karnam malleshwari" },
+  { q: "Who was known as the Tiger of Mysore?", a: "tipu sultan" },
+  { q: "Who founded the Brahmo Samaj?", a: "raja ram mohan roy" },
+
+  { q: "Who was known as Punjab Kesari?", a: "lala lajpat rai" },
+  { q: "Who was the first Indian woman in space?", a: "kalpana chawla" },
+  { q: "Which Indian leader is called Netaji?", a: "subhas chandra bose" },
+  { q: "Who is known for the Green Revolution in India?", a: "m s swaminathan" },
+  { q: "Who is the founder of Paytm?", a: "vijay shekhar sharma" },
+  { q: "Which freedom fighter threw a bomb in Central Assembly?", a: "bhagat singh" },
+  { q: "Who is known as the Missile Technologist of India?", a: "apj abdul kalam" },
+  { q: "Who is the current CEO of Google?", a: "sundar pichai" },
+  { q: "Who was the first Indian to receive Bharat Ratna?", a: "c rajagopalachari" },
+  { q: "Who was the second Prime Minister of India?", a: "lal bahadur shastri" },
+
+  { q: "Which Indian leader popularized the slogan 'Jai Jawan Jai Kisan'?", a: "lal bahadur shastri" },
+  { q: "Who founded Amul?", a: "verghese kurien" },
+  { q: "Who is known as the Father of Indian Navy?", a: "chhatrapati shivaji" },
+  { q: "Which Indian scientist launched Chandrayaan-1?", a: "g madhavan nair" },
+  { q: "Who was the first Indian to climb Mount Everest?", a: "tensing norgay" },
+  { q: "Who is the current CEO of Microsoft of Indian origin?", a: "satya nadella" },
+  { q: "Which Indian actor is known as the King of Bollywood?", a: "shah rukh khan" },
+  { q: "Which Indian singer is known as the Nightingale of Bollywood?", a: "lata mangeshkar" },
+  { q: "Who was the youngest Bharat Ratna recipient?", a: "sachin tendulkar" },
+  { q: "Who was the first woman IPS officer of India?", a: "kiran bedi" }
+];
+
+    let current = {}, score = 0, total = 0, timer, seconds = 30;
+    let history = [];
+
+    function nextQuestion() {
+      current = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById("question").textContent = current.q;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("resultMsg").textContent = "";
+      startTimer();
+    }
+
+    function checkAnswer() {
+      clearInterval(timer);
+      const input = document.getElementById("answerInput").value.trim().toLowerCase();
+      const correct = input === current.a;
+      total++;
+      if (correct) {
+        score++;
+        document.getElementById("resultMsg").textContent = "✅ Correct!";
+        document.getElementById("resultMsg").style.color = "green";
+      } else {
+        document.getElementById("resultMsg").textContent = `❌ Incorrect! Correct: ${current.a}`;
+        document.getElementById("resultMsg").style.color = "red";
+      }
+      document.getElementById("scoreDisplay").textContent = `Score: ${score}/${total}`;
+      history.push(`Q: ${current.q}\nYour Answer: ${input}\nCorrect Answer: ${current.a}\n`);
+      saveLeaderboard();
+    }
+
+    function startVoice() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-IN';
+      recognition.start();
+      recognition.onresult = (e) => {
+        document.getElementById("answerInput").value = e.results[0][0].transcript.toLowerCase();
+        checkAnswer();
+      };
+      recognition.onerror = () => alert("🎤 Could not recognize speech.");
+    }
+
+    function startTimer() {
+      seconds = 30;
+      document.getElementById("time").textContent = seconds;
+      timer = setInterval(() => {
+        seconds--;
+        document.getElementById("time").textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          checkAnswer();
+        }
+      }, 1000);
+    }
+
+    function exportResults() {
+      const text = `Quiz Results:\nScore: ${score}/${total}\n\n` + history.join("\n") + "\n";
+      const blob = new Blob([text], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "quiz-results.txt";
+      a.click();
+    }
+
+    function saveLeaderboard() {
+      const existing = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      existing.push({ score, total, date: new Date().toLocaleString() });
+      existing.sort((a, b) => (b.score / b.total) - (a.score / b.total));
+      localStorage.setItem("leaderboard", JSON.stringify(existing.slice(0, 5)));
+      displayLeaderboard();
+    }
+
+    function displayLeaderboard() {
+      const list = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      const el = document.getElementById("leaderboard");
+      el.innerHTML = "";
+      list.forEach((entry) => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.date} — ${entry.score}/${entry.total}`;
+        el.appendChild(li);
+      });
+    }
+
+    window.onload = () => {
+      nextQuestion();
+      displayLeaderboard();
+    };
+  </script>
+  <div id="chatbot-container">
+  <button id="chat-toggle">💬</button>
+  <div id="chatbox" class="hidden">
+    <div id="chat-header">AI-GPT</div>
+    <div id="chat-messages"></div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Ask about any personality..." />
+      <button id="send-btn">➤</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  #chat-toggle {
+    background: #003366;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  #chatbox {
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+  }
+
+  #chatbox.hidden {
+    display: none;
+  }
+
+  #chat-header {
+    background: #003366;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+  }
+
+  #chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+  }
+
+  #chat-input-area {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  #chat-input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  #send-btn {
+    background: #003366;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById("chat-toggle");
+  const chatbox = document.getElementById("chatbox");
+  const chatInput = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("send-btn");
+  const chatMessages = document.getElementById("chat-messages");
+
+  toggleBtn.addEventListener("click", () => {
+    chatbox.classList.toggle("hidden");
+  });
+
+  sendBtn.addEventListener("click", sendChat);
+  chatInput.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendChat();
+  });
+
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.style.margin = "5px 0";
+    msg.style.textAlign = sender === "user" ? "right" : "left";
+    msg.innerHTML = `<b>${sender === "user" ? "You" : "BharatGPT"}:</b> ${text}`;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function sendChat() {
+    const question = chatInput.value.trim();
+    if (!question) return;
+
+    addMessage(question, "user");
+    chatInput.value = "";
+
+    try {
+      const res = await fetch("http://localhost:4000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: question })
+      });
+      const data = await res.json();
+      addMessage(data.reply, "bot");
+    } catch (err) {
+      addMessage("⚠️ Error reaching the assistant.", "bot");
+    }
+  }
+</script>
+
+
+</body>
+</html>

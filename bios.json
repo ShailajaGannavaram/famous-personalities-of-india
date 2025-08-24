@@ -1,0 +1,27 @@
+[
+  {
+    "name": "A. P. J. Abdul Kalam",
+    "bio": "Aerospace scientist and the 11th President of India, known as the Missile Man of India.",
+    "tags": ["scientist", "Tamil Nadu", "president"]
+  },
+  {
+    "name": "Dr. B. R. Ambedkar",
+    "bio": "Architect of the Indian Constitution and a social reformer who campaigned against untouchability.",
+    "tags": ["politician", "Maharashtra", "law"]
+  },
+  {
+    "name": "Sachin Tendulkar",
+    "bio": "Legendary Indian cricketer often referred to as the 'Master Blaster'.",
+    "tags": ["sportsperson", "Maharashtra", "cricket"]
+  },
+  {
+    "name": "Sarojini Naidu",
+    "bio": "Freedom fighter and poet known as the Nightingale of India.",
+    "tags": ["freedom fighter", "Uttar Pradesh", "poet"]
+  },
+  {
+    "name": "Rabindranath Tagore",
+    "bio": "First Asian Nobel Laureate and composer of the Indian national anthem.",
+    "tags": ["artist", "West Bengal", "poet"]
+  }
+]
